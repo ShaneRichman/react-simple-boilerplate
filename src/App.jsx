@@ -10,18 +10,7 @@ class App extends Component {
 
     this.state = {
       currentUser: {name: "Bob"}, // optional. if currentUser is not defined, it means the user is Anonymous
-      messages: [
-        {
-          id: 0,
-          username: "Bob",
-          content: "Has anyone seen my marbles?",
-        },
-        {
-          id: 1,
-          username: "Anonymous",
-          content: "No, I think you lost them. You lost your marbles Bob. You lost them for good."
-        }
-      ]
+      messages: []
     };
     this.onNewMessage = this.onNewMessage.bind(this);
   }
@@ -29,24 +18,22 @@ class App extends Component {
   componentDidMount() {
     this.socket = new WebSocket('ws://localhost:3001');
 
-    this.socket.onopen = (event) => {
-      this.socket.send('Hello from the client side nah its funny')
-    }
+    // this.socket.onopen = (event) => {
+    //   this.socket.send('Hello from the client side nah its funny')
+    // }
     this.socket.addEventListener('message', event => {
-      // this.setState({messages: this.state.messages.concat({
-        // text: event.data
-        console.log(event.data);
-      // })});
+      const allMessages = (event.data);
+      console.log("list all messages", allMessages);
+      this.setState({messages: this.state.messages.concat(JSON.parse(allMessages))});
     });
   }
 
   onNewMessage(content) {
     if (content.length < 1 || content.length > 250) {
-
     } else {
-      const newMessage = {id: Math.random()*100000, username: this.state.currentUser.name, content};
+      const newMessage = {username: this.state.currentUser.name, content};
       const messages = this.state.messages.concat(newMessage);
-      this.setState({messages: messages})
+      this.socket.send(JSON.stringify(newMessage));
     }
   }
 
@@ -57,7 +44,7 @@ class App extends Component {
             <a href="/" className="navbar-brand">Chatty</a>
           </nav>
           <MessageList messages={this.state.messages}/>
-          <ChatBar currentUser={ this.state.currentUser.name} onKeyPress={this.handleKeyPress} onNewMessage={this.onNewMessage}/>
+          <ChatBar currentUser={ this.state.currentUser.name} onNewMessage={this.onNewMessage}/>
         </div>
       );
   }
