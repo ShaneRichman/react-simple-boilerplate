@@ -11,7 +11,7 @@ class App extends Component {
     this.state = {
       currentUser: {name: "Anonymous"},
       messages: [],
-      type: 'postMessage',
+      type: 'postNotification',
       status: '',
       usersOnline: 0
     };
@@ -21,18 +21,23 @@ class App extends Component {
 
   componentDidMount() {
     this.socket = new WebSocket('ws://localhost:3001');
+
     this.socket.addEventListener('message', event => {
       const newData = JSON.parse(event.data);
       if (newData.type === 'postMessage') {
-        const data = this.state.messages.concat(newData);
-        this.setState({messages: data});
+        this.setState({type: 'postMessage'});
       } else {
         this.setState({
-          usersOnline: newData.userCount,
-          status: newData.content
+          type: 'postNotification'
           })
       }
+      const data = this.state.messages.concat(newData);
+      this.setState({
+        usersOnline: newData.userCount,
+        messages: data
+      })
     });
+
   }
 
   onNewName(username) {
@@ -59,7 +64,7 @@ class App extends Component {
             <a href="/" className="navbar-brand">Chatty</a>
             <span className="sillyNumber">Users Online: {this.state.usersOnline}</span>
           </nav>
-          <MessageList messages={this.state.messages} status={this.state.status}/>
+          <MessageList messages={this.state.messages} type={this.state.type}/>
           <ChatBar currentUser={ this.state.currentUser.name} onNewName={this.onNewName} onNewMessage={this.onNewMessage}/>
         </div>
       );

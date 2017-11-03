@@ -9,15 +9,12 @@ class MessageList extends Component {
       key           ={message.id}
       username      ={message.username}
       content       ={message.content}
-      notification  ={this.props.status} />
+      type          ={message.type}
+      />
     });
     return (
       <main className="messages">
-        <div className="message system">
-          {(this.props.status === '') ? '' : this.props.status }
-        </div>
-          { messages }
-
+        { messages }
       </main>
     );
   }

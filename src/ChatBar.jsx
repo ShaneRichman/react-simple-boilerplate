@@ -24,7 +24,7 @@ handleNameChange = (event) => {
   }
 }
 
-handleKeyPress = (event) => {
+handleMessageSend = (event) => {
     if(event.key == 'Enter'){
       this.props.onNewMessage(event.target.value, this.state.currentUser);
       event.target.value = '';
@@ -36,7 +36,7 @@ handleKeyPress = (event) => {
     return (
       <footer className="chatbar">
         <input className="chatbar-username" placeholder="Your Name (Optional)" defaultValue={me} onKeyPress={this.handleNameChange} onChange={this.getUserName}/>
-        <input className="chatbar-message" placeholder="Type a message and hit ENTER" onKeyPress={this.handleKeyPress } />
+        <input className="chatbar-message" placeholder="Type a message and hit ENTER" onKeyPress={this.handleMessageSend } />
       </footer>
     );
   }
