@@ -9,7 +9,7 @@ class App extends Component {
     super(props);
 
     this.state = {
-      currentUser: {name: "Bob"}, // optional. if currentUser is not defined, it means the user is Anonymous
+      currentUser: {name: ""}, // optional. if currentUser is not defined, it means the user is Anonymous
       messages: []
     };
     this.onNewMessage = this.onNewMessage.bind(this);
@@ -23,18 +23,19 @@ class App extends Component {
     // }
     this.socket.addEventListener('message', event => {
       const allMessages = (event.data);
-      console.log("list all messages", allMessages);
+      // console.log("list all messages", allMessages);
       this.setState({messages: this.state.messages.concat(JSON.parse(allMessages))});
     });
   }
 
-  onNewMessage(content) {
-    if (content.length < 1 || content.length > 250) {
-    } else {
-      const newMessage = {username: this.state.currentUser.name, content};
+  onNewMessage(content, username) {
+    if (content.length < 1 || content.length > 250) return;
+      if (username === ''){
+        username = 'Anonymous';
+      }
+      const newMessage = {username, content};
       const messages = this.state.messages.concat(newMessage);
       this.socket.send(JSON.stringify(newMessage));
-    }
   }
 
   render() {
