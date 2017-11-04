@@ -7,6 +7,7 @@ class Message extends Component {
     // console.log(this.props.content)
 let URL = ''
 URL = this.props.content.match(/\bhttps?:\/\/\S+/gi);
+// this.props.content.replace(/^https+/, '');
     // if (content.has(.jpg)) {
       // return (
         // {/*<div className="message">*/}
@@ -18,13 +19,10 @@ URL = this.props.content.match(/\bhttps?:\/\/\S+/gi);
       // );
     // {/*}*/}
 
-
-
-
     if (this.props.type === "postMessage") {
       return (
         <div className="message">
-          <span className="message-username">{this.props.username}</span>
+          <span className={`message-username ${this.props.colour}`}>{this.props.username}</span>
           <span className="message-content">{this.props.content}</span>
           <div className="postedImg">
             <img src={URL}></img>
