@@ -29,7 +29,6 @@ function broadcast(data) {
 wss.on('connection', (ws) => {
   console.log('Client server has connected....');
   let userCount = wss.clients.size;
-  // console.log(wss.clients.size);
   const userJoin = {id: uuid(), type: 'postNotification', content: 'A new user has joined the room.', userCount}
   broadcast(JSON.stringify(userJoin))
 
